@@ -30,8 +30,8 @@ sub new
 
     if ($create)
     {
-        $self->{ 'db' }
-          ->do("CREATE TABLE store (id INTEGER PRIMARY KEY, key, val );");
+        $self->{ 'db' }->do(
+              "CREATE TABLE store (id INTEGER PRIMARY KEY, key UNIQUE, val );");
     }
 
     return $self;
@@ -66,18 +66,12 @@ sub set
 {
     my ( $self, $key, $val ) = (@_);
 
-    if ( !$self->{ 'del' } )
-    {
-        $self->{ 'del' } =
-          $self->{ 'db' }->prepare("DELETE FROM store WHERE key=?");
-    }
-    $self->{ 'del' }->execute($key);
-    $self->{ 'del' }->finish();
 
     if ( !$self->{ 'ins' } )
     {
         $self->{ 'ins' } =
-          $self->{ 'db' }->prepare("INSERT INTO store (key,val) VALUES( ?,? )");
+          $self->{ 'db' }
+          ->prepare("INSERT OR REPLACE INTO store (key,val) VALUES( ?,? )");
     }
     $self->{ 'ins' }->execute( $key, $val );
     $self->{ 'ins' }->finish();
