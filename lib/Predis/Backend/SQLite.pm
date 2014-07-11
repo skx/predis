@@ -21,17 +21,29 @@ sub new
     bless( $self, $class );
 
     my $file = $supplied{ 'path' } || $ENV{ 'HOME' } . "/.predis.db";
-
     my $create = 1;
     $create = 0 if ( -e $file );
 
     $self->{ 'db' } =
       DBI->connect( "dbi:SQLite:dbname=$file", "", "", { AutoCommit => 1 } );
 
+    #
+    #  Create teh database if it is missing.
+    #
     if ($create)
     {
         $self->{ 'db' }->do(
               "CREATE TABLE store (id INTEGER PRIMARY KEY, key UNIQUE, val );");
+    }
+
+    #
+    #  This is potentially risky, but improves the throughput by several
+    # orders of magnitude.
+    #
+    if ( !$ENV{ 'SAFE' } )
+    {
+        $self->{ 'db' }->do("PRAGMA synchronous = OFF");
+        $self->{ 'db' }->do("PRAGMA journal_mode = MEMORY");
     }
 
     return $self;
@@ -66,7 +78,6 @@ sub set
 {
     my ( $self, $key, $val ) = (@_);
 
-
     if ( !$self->{ 'ins' } )
     {
         $self->{ 'ins' } =
@@ -75,6 +86,7 @@ sub set
     }
     $self->{ 'ins' }->execute( $key, $val );
     $self->{ 'ins' }->finish();
+
 }
 
 
