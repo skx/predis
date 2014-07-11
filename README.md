@@ -48,5 +48,26 @@ Then experiment
     ..
 
 
+Extending
+---------
+
+Obviously I've only covered the simple case(s) so far.
+
+To make this more Redis-like we'd need to add the set/hash functions.
+
+The sets should be simple to add at least, and there are two choices:
+
+* Either allow multiple values for each key.
+* Or store JSON-encoded Arrays as key-members.
+
+We'd probably need to rework things to store hashes, although again we
+could use JSON-encoded Perl Hashes for the storage.
+
+(I suspect we'd want to update the storage-table to have three fields in this case:
+`key`, `val` and `type`.  Where `type` would be an ENUM between `str`, `array`, or `hash`.)
+
+The coding isn't hard, I just don't need it yet - so pull requests welcome.
+
+
 Steve
 -- 
