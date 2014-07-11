@@ -11,6 +11,7 @@ use warnings;
 
 package Predis;
 
+use AnyEvent::Strict;
 use AnyEvent;
 use AnyEvent::Socket;
 use Protocol::Redis;
