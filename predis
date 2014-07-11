@@ -1,15 +1,81 @@
 #!/usr/bin/perl -Ilib/
-#
-#  Trivial Redis-server in Perl, which proxies to SQLite.
-#
-# Steve
-# --
-#
+
+=head1 NAME
+
+predis - Partial implementation of a Redis server in perl.
+
+=cut
+
+
+=head1 SYNOPSIS
+
+  General Options:
+
+   --port      Specify the port to listen upon.
+   --path      Specify the back-end SQLite file to write.
+   --help      Show the help information for this script.
+   --manual    Show the manual for this script.
+
+=cut
+
+
+=head1 ABOUT
+
+predis is a 100% pure perl implementation of a Redis-server, which writes
+all date to an SQLite backing-store.
+
+The intention is that the back-ends will be pluggable, but that is not
+yet implemented.
+
+Currently the following primitives are implemented:
+
+=over 8
+
+=item *
+get/set
+
+=item *
+incr/decr
+
+=item *
+del
+
+=item *
+ping/info
+
+=back
+
+Additional primitives might or might not be implemented in the future,
+as this is functional as-is for me and my use-case(s).
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+
+=head1 LICENSE
+
+Copyright (c) 2014 by Steve Kemp.  All rights reserved.
+
+This script is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+The LICENSE file contains the full text of the license.
+
+=cut
+
 
 use strict;
 use warnings;
 
 use Getopt::Long;
+use Pod::Usage;
 
 use Predis;
 use Predis::Backend::SQLite;
@@ -22,10 +88,12 @@ my %CONFIG = ( port => 6379 );
 
 exit
   if (
-       !GetOptions( "help"   => \$CONFIG{ 'help' },
-                    "port=i" => \$CONFIG{ 'port' },
-                    "path=s" => \$CONFIG{ 'path' } ) );
+       !GetOptions( "help"    => \$CONFIG{ 'help' },
+                    "manual"  => \$CONFIG{ 'manual' },
+                    "port=i"  => \$CONFIG{ 'port' },
+                    "path=s"  => \$CONFIG{ 'path' } ) );
 pod2usage(1) if ( $CONFIG{ 'help' } );
+pod2usage( -verbose => 2 ) if ( $CONFIG{'manual'} );
 
 
 #
