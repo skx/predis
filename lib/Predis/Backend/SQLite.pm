@@ -46,10 +46,14 @@ sub get
 {
     my ( $self, $key ) = (@_);
 
-    my $sql = $self->{ 'db' }->prepare("SELECT val FROM store WHERE key=?");
-    $sql->execute($key);
-    my $x = $sql->fetchrow_array() || "";
-    $sql->finish();
+    if ( !$self->{ 'get' } )
+    {
+        $self->{ 'get' } =
+          $self->{ 'db' }->prepare("SELECT val FROM store WHERE key=?");
+    }
+    $self->{ 'get' }->execute($key);
+    my $x = $self->{ 'get' }->fetchrow_array() || "";
+    $self->{ 'get' }->finish();
     return ($x);
 }
 
@@ -62,14 +66,21 @@ sub set
 {
     my ( $self, $key, $val ) = (@_);
 
-    my $sql = $self->{ 'db' }->prepare("DELETE FROM store WHERE key=?");
-    $sql->execute($key);
-    $sql->finish();
+    if ( !$self->{ 'del' } )
+    {
+        $self->{ 'del' } =
+          $self->{ 'db' }->prepare("DELETE FROM store WHERE key=?");
+    }
+    $self->{ 'del' }->execute($key);
+    $self->{ 'del' }->finish();
 
-    $sql =
-      $self->{ 'db' }->prepare("INSERT INTO store (key,val) VALUES( ?,? )");
-    $sql->execute( $key, $val );
-    $sql->finish();
+    if ( !$self->{ 'ins' } )
+    {
+        $self->{ 'ins' } =
+          $self->{ 'db' }->prepare("INSERT INTO store (key,val) VALUES( ?,? )");
+    }
+    $self->{ 'ins' }->execute( $key, $val );
+    $self->{ 'ins' }->finish();
 }
 
 
@@ -114,9 +125,13 @@ sub del
 {
     my ( $self, $key ) = (@_);
 
-    my $sql = $self->{ 'db' }->prepare("DELETE FROM store WHERE key=?");
-    $sql->execute($key);
-    $sql->finish();
+    if ( !$self->{ 'del' } )
+    {
+        $self->{ 'del' } =
+          $self->{ 'db' }->prepare("DELETE FROM store WHERE key=?");
+    }
+    $self->{ 'del' }->execute($key);
+    $self->{ 'del' }->finish();
 }
 
 
