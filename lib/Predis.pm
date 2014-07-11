@@ -32,7 +32,7 @@ my %commands = (
     incr => sub {
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
-        print STDERR "INCR($key)\n";
+        $ENV{ 'DEBUG' } && print STDERR "INCR($key)\n";
 
         return ( { type => ':', data => $backend->incr($key) } );
     },
@@ -43,7 +43,7 @@ my %commands = (
     decr => sub {
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
-        print STDERR "DECR($key)\n";
+        $ENV{ 'DEBUG' } && print STDERR "DECR($key)\n";
 
         return ( { type => ':', data => $backend->decr($key) } );
 
@@ -56,7 +56,7 @@ my %commands = (
     del => sub {
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
-        print STDERR "DEL($key)\n";
+        $ENV{ 'DEBUG' } && print STDERR "DEL($key)\n";
 
         $backend->del($key);
 
@@ -70,7 +70,7 @@ my %commands = (
     expire => sub {
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
-        print STDERR "EXPIRE($key)\n";
+        $ENV{ 'DEBUG' } && print STDERR "EXPIRE($key)\n";
 
         $backend->expire($key);
 
@@ -88,7 +88,7 @@ my %commands = (
         #
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
-        print STDERR "GET($key)\n";
+        $ENV{ 'DEBUG' } && print STDERR "GET($key)\n";
 
         return ( { type => '+', data => $backend->get($key) } );
     },
@@ -102,7 +102,7 @@ my %commands = (
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         my $val  = $data->{ 'data' }[2]->{ 'data' };
-        print STDERR "SET($key, $val)\n";
+        $ENV{ 'DEBUG' } && print STDERR "SET($key, $val)\n";
 
         $backend->set( $key, $val );
 
