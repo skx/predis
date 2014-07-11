@@ -1,7 +1,7 @@
 #
 #  Storage abstraction for SQLite
 #
-package Backend::SQLite;
+package Predis::Backend::SQLite;
 
 use DBI;
 

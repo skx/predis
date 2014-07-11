@@ -10,13 +10,13 @@ use strict;
 use warnings;
 
 use Predis;
-use Backend::SQLite;
+use Predis::Backend::SQLite;
 
 
 #
 #  The backend storage module.
 #
-my $backend = Backend::SQLite->new( file => "/tmp/lost.db" );
+my $backend = Predis::Backend::SQLite->new( file => "/tmp/lost.db" );
 
 my $server = Predis->new( backend => $backend );
 $server->serve();
