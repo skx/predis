@@ -88,21 +88,20 @@ my %CONFIG = ( port => 6379 );
 
 exit
   if (
-       !GetOptions( "help"    => \$CONFIG{ 'help' },
-                    "manual"  => \$CONFIG{ 'manual' },
-                    "port=i"  => \$CONFIG{ 'port' },
-                    "path=s"  => \$CONFIG{ 'path' } ) );
+       !GetOptions( "help"   => \$CONFIG{ 'help' },
+                    "manual" => \$CONFIG{ 'manual' },
+                    "port=i" => \$CONFIG{ 'port' },
+                    "path=s" => \$CONFIG{ 'path' } ) );
 pod2usage(1) if ( $CONFIG{ 'help' } );
-pod2usage( -verbose => 2 ) if ( $CONFIG{'manual'} );
+pod2usage( -verbose => 2 ) if ( $CONFIG{ 'manual' } );
 
 
 #
 #  The backend storage module.
 #
 my $backend =
-  Predis::Backend::SQLite->new( path => $CONFIG{ 'path' } ?
-                                  $CONFIG {'path'}
-                                : undef );
+  Predis::Backend::SQLite->new( path => $CONFIG{ 'path' } ? $CONFIG{ 'path' } :
+                                  undef );
 
 #
 #  The network-magic.
