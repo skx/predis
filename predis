@@ -18,7 +18,7 @@ use Predis::Backend::SQLite;
 #
 #  Parse our command-line options.
 #
-my %CONFIG = ( port => 6333 );
+my %CONFIG = ( port => 6379 );
 
 exit
   if (
@@ -32,8 +32,8 @@ pod2usage(1) if ( $CONFIG{ 'help' } );
 #  The backend storage module.
 #
 my $backend =
-  Predis::Backend::SQLite->new( file => $CONFIG{ 'path' } ?
-                                  CONFIG {'path'}
+  Predis::Backend::SQLite->new( path => $CONFIG{ 'path' } ?
+                                  $CONFIG {'path'}
                                 : undef );
 
 #

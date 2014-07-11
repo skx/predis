@@ -3,6 +3,9 @@
 #
 package Predis::Backend::SQLite;
 
+
+use strict;
+use warnings;
 use DBI;
 
 
@@ -17,12 +20,13 @@ sub new
     my $self = {};
     bless( $self, $class );
 
-    my $file = $supplied{ 'db' } || $ENV{ 'HOME' } . "/.predis.db";
+    my $file = $supplied{ 'path' } || $ENV{ 'HOME' } . "/.predis.db";
+
     my $create = 1;
     $create = 0 if ( -e $file );
 
     $self->{ 'db' } =
-      DBI->connect( "dbi:SQLite:dbname=$FILE", "", "", { AutoCommit => 1 } );
+      DBI->connect( "dbi:SQLite:dbname=$file", "", "", { AutoCommit => 1 } );
 
     if ($create)
     {
