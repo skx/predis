@@ -129,37 +129,37 @@ sub new
     my $self = {};
     bless( $self, $class );
 
-    $backend = $supplied{'backend'} || die "No backend";
-
+    $backend = $supplied{ 'backend' } || die "No backend";
+    $self->{ 'port' } = $supplied{ 'port' } || 6379;
     return $self;
 }
 
 
 sub serve
 {
-
+    my ($self) = (@_);
     my $c = AnyEvent->condvar;
-    tcp_server undef, 6379, sub {
+    tcp_server undef, $self->{ 'port' }, sub {
         my $fh = shift;
         my $redis = Protocol::Redis->new( api => 1 );
 
         $redis->on_message(
-                           sub {
-                               my ( $parser, $data ) = @_;
-                               my $command = $commands{ lc $data->{ data }[0]{ data } } ||
-                                 \&default;
+            sub {
+                my ( $parser, $data ) = @_;
+                my $command = $commands{ lc $data->{ data }[0]{ data } } ||
+                  \&default;
 
-                               syswrite( $fh, $parser->encode( $command->($data) ) );
-                           } );
+                syswrite( $fh, $parser->encode( $command->($data) ) );
+            } );
 
         my $io;
         $io = AnyEvent->io(
-                           fh   => $fh,
-                           poll => 'r',
-                           cb   => sub {
-                               undef $io unless sysread( $fh, my $chunk, 1024, 0 );
-                               $redis->parse($chunk);
-                           } );
+            fh   => $fh,
+            poll => 'r',
+            cb   => sub {
+                undef $io unless sysread( $fh, my $chunk, 1024, 0 );
+                $redis->parse($chunk);
+            } );
     };
 
 

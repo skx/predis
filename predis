@@ -9,14 +9,36 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
+
 use Predis;
 use Predis::Backend::SQLite;
 
 
 #
+#  Parse our command-line options.
+#
+my %CONFIG = ( port => 6333 );
+
+exit
+  if (
+       !GetOptions( "help"   => \$CONFIG{ 'help' },
+                    "port=i" => \$CONFIG{ 'port' },
+                    "path=s" => \$CONFIG{ 'path' } ) );
+pod2usage(1) if ( $CONFIG{ 'help' } );
+
+
+#
 #  The backend storage module.
 #
-my $backend = Predis::Backend::SQLite->new( file => "/tmp/lost.db" );
+my $backend =
+  Predis::Backend::SQLite->new( file => $CONFIG{ 'path' } ?
+                                  CONFIG {'path'}
+                                : undef );
 
-my $server = Predis->new( backend => $backend );
+#
+#  The network-magic.
+#
+my $server = Predis->new( backend => $backend,
+                          port    => $CONFIG{ 'port' } );
 $server->serve();
