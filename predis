@@ -11,6 +11,7 @@ predis - Partial implementation of a Redis server in perl.
 
   General Options:
 
+   --debug     Output a log of the commands which are executed.
    --port      Specify the port to listen upon.
    --path      Specify the back-end SQLite file to write.
    --help      Show the help information for this script.
@@ -90,6 +91,7 @@ exit
   if (
        !GetOptions( "help"   => \$CONFIG{ 'help' },
                     "manual" => \$CONFIG{ 'manual' },
+                    "debug"  => \$ENV{ 'DEBUG' },
                     "port=i" => \$CONFIG{ 'port' },
                     "path=s" => \$CONFIG{ 'path' } ) );
 pod2usage(1) if ( $CONFIG{ 'help' } );
