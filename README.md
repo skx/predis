@@ -47,9 +47,21 @@ Then experiment
     ..
     ..
 
+There are some simple tests included beneath `t/` which can be executed as expected:
+
+    $ prove --shuffle t/
+
 
 Benchmarks
 ----------
+
+There is a trivial [benchmark script](benchmark) included, which will run a number
+of operations for 5 seconds at a time, and count the number that completed.
+
+This is not intended to be an exhaustive benchmark, merely something to give an
+order of magnitude comparison between native redis and predis.
+
+Upon my test system the following results were achieved:
 
 Redis:
 
