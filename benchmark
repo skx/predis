@@ -1,0 +1,100 @@
+#!/usr/bin/perl -w
+#
+# This is a simple benchmarking script which will run simple tests:
+#
+#  1.  set/get a single-key value.
+#
+#  2.  incr/decr a single-key value.
+#
+#  3.  set/delete a single-key value.
+#
+# These tests will each run for 5 seconds.
+#
+#
+
+
+use strict;
+use warnings;
+
+use Redis;
+
+
+
+#
+#  The tests.
+#
+my %tests = (
+    get_set => sub {
+        my $r = shift;
+        $r->set( "foo", "bar" );
+        $r->get("foo");
+    },
+    incr_decr => sub {
+        my $r = shift;
+        $r->incr("foof");
+        $r->decr("foof");
+    },
+    set_del => sub {
+        my $r = shift;
+        $r->incr("foof");
+        $r->decr("foof");
+    },
+);
+
+
+
+#
+#  How long the tests run for
+#
+my $t = 5;
+
+
+#
+#  Connect to redis/predis.
+#
+my $r = Redis->new();
+
+
+#
+#  For each test
+#
+foreach my $test ( keys %tests )
+{
+
+    #
+    #  Get the starting time
+    #
+    print $test . " ";
+    my $start = time();
+    my $count = 0;
+
+    #
+    #  Loop until the time-period has been exceeded.
+    #
+    my $run = 1;
+    while ($run)
+    {
+
+        #
+        #  Run the test.
+        #
+        $tests{ $test }->($r);
+        $count += 1;
+
+        #
+        #  Skip if we've run too long.
+        #
+        my $now = time();
+        $run = 0 if ( ( $now - $start ) > $t );
+
+    }
+
+    #
+    #  Show the number of runs.
+    #
+    print " $count requests in $t seconds\n";
+}
+
+
+
+
