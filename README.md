@@ -48,6 +48,24 @@ Then experiment
     ..
 
 
+Benchmarks
+----------
+
+Redis:
+
+    incr_decr  30895 requests in 5 seconds
+    get_set  33267 requests in 5 seconds
+    set_del  38706 requests in 5 seconds
+
+Predis:
+
+    incr_decr 11064 requests in 5 seconds
+    get_set   13100 requests in 5 seconds
+    set_del   11769 requests in 5 seconds
+
+This suggests that predis is 3-4 times slower than Redis, but obviously benchmarks are unrealistic and will vary depending on your system and use-case.
+
+
 Extending
 ---------
 
