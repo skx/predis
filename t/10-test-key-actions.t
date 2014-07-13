@@ -41,38 +41,56 @@ $skip = 1 unless ( $redis && $redis->ping() );
 
 SKIP:
 {
-
     skip "Redis must be running on localhost" unless ( !$skip );
+
+    #
+    #  Generate a random key for testing purposes.
+    #
+    my @chars = ( "A" .. "Z", "a" .. "z" );
+    my $key;
+    $key .= $chars[rand @chars] for 1 .. 8;
+
 
     #
     #  AN empty value shoul return an empty-string.
     #
     #  Set it and confirm.
     #
-    is( "", $redis->get("foo"), "An empty key is undefined" );
-    $redis->set( "foo", "bar" );
-    is( $redis->get("foo"), "bar", "Fetching a value works" );
-    $redis->del("foo");
-    is( "", $redis->get("foo"), "An deleted key is undefined" );
+    is( "", $redis->get($key), "An empty key is undefined" );
+    $redis->set( $key, "bar" );
+    is( $redis->get($key), "bar", "Fetching a value works" );
+    $redis->del($key);
+    is( "", $redis->get($key), "An deleted key is undefined" );
 
     #
     #
     #  Getting an empty value is empty
     #
-    is( $redis->get("count"), "", "No count is empty" );
-    ok( $redis->incr("count") );
-    is( $redis->get("count"), 1, "incr'd count is 1" );
-    ok( $redis->incr("count") );
-    is( $redis->get("count"), 2, "incr'd count is 2" );
+    is( $redis->get($key), "", "No count is empty" );
+    ok( $redis->incr($key) );
+    is( $redis->get($key), 1, "incr'd count is 1" );
+    ok( $redis->incr($key) );
+    is( $redis->get($key), 2, "incr'd count is 2" );
 
     #
     #  Deleting a count works
     #
-    $redis->del("count");
-    is( $redis->get("count"), "", "Deleted value is gone" );
+    $redis->del($key);
+    is( $redis->get($key), "", "Deleted value is gone" );
 
-
-
+    #
+    #  Test the incrby primitive
+    #
+    is( $redis->get($key), "", "No count is empty" );
+    ok( $redis->incrby( $key, 20 ) );
+    is( $redis->get($key), 20, "incr'd count is 20" );
+    ok( $redis->incrby( $key, 20 ) );
+    is( $redis->get($key), 40, "incr'd count is 40" );
+    ok( $redis->decrby( $key, 10 ) );
+    is( $redis->get($key), 30, "decr'd count is 30" );
+    ok( $redis->decrby( $key, 10 ) );
+    is( $redis->get($key), 20, "decr'd count is 30" );
+    $redis->del($key);
 }
 
 
