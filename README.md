@@ -20,6 +20,7 @@ data-structures are not implemented.
 Currently the following primitives are implemented, all those ones that I need:
 
 * `get( key )`
+* `strlen( key )`
 * `set( key, value )`
 * `incr( key )`
 * `incrby( key, amount )`

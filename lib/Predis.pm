@@ -111,6 +111,20 @@ my %commands = (
     },
 
 
+    strlen => sub {
+
+        #
+        #  This is nasty
+        #
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "GET($key)\n";
+
+        return ( { type => '+', data => length( $backend->get($key) ) } );
+    },
+
+
+
     set => sub {
 
         #
