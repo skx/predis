@@ -22,7 +22,9 @@ Currently the following primitives are implemented, all those ones that I need:
 * `get( key )`
 * `set( key, value )`
 * `incr( key )`
+* `incrby( key, amount )`
 * `decr( key )`
+* `decrby( key, amount )`
 * `del( key )`
 
 
@@ -100,4 +102,4 @@ The coding isn't hard, I just don't need it yet - so pull requests welcome.
 
 
 Steve
--- 
+--

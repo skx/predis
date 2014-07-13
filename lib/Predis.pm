@@ -36,6 +36,14 @@ my %commands = (
 
         return ( { type => ':', data => $backend->incr($key) } );
     },
+    incrby => sub {
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        my $amt  = $data->{ 'data' }[2]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "INCRBY($key,$amt)\n";
+
+        return ( { type => ':', data => $backend->incr( $key, $amt ) } );
+    },
 
     #
     #  Decrement an integer.
@@ -46,6 +54,15 @@ my %commands = (
         $ENV{ 'DEBUG' } && print STDERR "DECR($key)\n";
 
         return ( { type => ':', data => $backend->decr($key) } );
+
+    },
+    decrby => sub {
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        my $amt  = $data->{ 'data' }[2]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "DECRBY($key,$amt)\n";
+
+        return ( { type => ':', data => $backend->decr( $key, $amt ) } );
 
     },
 
@@ -132,7 +149,7 @@ sub new
 
     $backend = $supplied{ 'backend' } || die "No backend";
     $self->{ 'port' } = $supplied{ 'port' } || 6379;
-    $self->{'redis'} = Protocol::Redis->new( api => 1 );
+    $self->{ 'redis' } = Protocol::Redis->new( api => 1 );
     return $self;
 }
 
@@ -144,7 +161,7 @@ sub serve
     tcp_server undef, $self->{ 'port' }, sub {
         my $fh = shift;
 
-        $self->{'redis'}->on_message(
+        $self->{ 'redis' }->on_message(
             sub {
                 my ( $parser, $data ) = @_;
                 my $command = $commands{ lc $data->{ data }[0]{ data } } ||
@@ -159,7 +176,7 @@ sub serve
             poll => 'r',
             cb   => sub {
                 undef $io unless sysread( $fh, my $chunk, 1024, 0 );
-                $self->{'redis'}->parse($chunk);
+                $self->{ 'redis' }->parse($chunk);
             } );
     };
 

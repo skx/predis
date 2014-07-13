@@ -96,10 +96,12 @@ sub set
 #
 sub incr
 {
-    my ( $self, $key ) = (@_);
+    my ( $self, $key, $amt ) = (@_);
+
+    $amt = 1 if ( !defined($amt) );
 
     my $cur = $self->get($key) || 0;
-    $cur += 1;
+    $cur += $amt;
     $self->set( $key, $cur );
 
     return ($cur);
@@ -113,10 +115,12 @@ sub incr
 #
 sub decr
 {
-    my ( $self, $key ) = (@_);
+    my ( $self, $key, $amt ) = (@_);
+
+    $amt = 1 if ( !defined($amt) );
 
     my $cur = $self->get($key) || 0;
-    $cur -= 1;
+    $cur -= $amt;
     $self->set( $key, $cur );
 
     return ($cur);
