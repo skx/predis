@@ -79,7 +79,7 @@ SKIP:
     is( $redis->get($key), "", "Deleted value is gone" );
 
     #
-    #  Test the incrby primitive
+    #  Test the incrby/decrby primitive
     #
     is( $redis->get($key), "", "No count is empty" );
     ok( $redis->incrby( $key, 20 ) );
@@ -91,6 +91,17 @@ SKIP:
     ok( $redis->decrby( $key, 10 ) );
     is( $redis->get($key), 20, "decr'd count is 30" );
     $redis->del($key);
+
+    #
+    #  Test the length.
+    #
+    for ( my $len = 1 ; $len < 100 ; $len++ )
+    {
+        $redis->set( $key, "x" x $len );
+        is( length( $redis->get($key) ), $len, "Got a value of length $len" );
+        is( $redis->strlen($key), $len, "strlen agrees with length $len" );
+        $redis->del($key);
+    }
 }
 
 
