@@ -4,11 +4,15 @@ predis
 A Redis server implemented in 100% pure Perl which proxies commands to a local
 SQLite instance.
 
-This server will listen upon a network, and accept/process Redis commands.  As such it
-can be useful for hacking around interesting problems.
+This server will listen upon a network, and accept/process Redis commands.  As such it can be useful for hacking around interesting problems.
 
-Because the storage is an SQLite database values will persist between invocations, just
-like the real thing.
+Because the storage is persistent database-values can be stored between different invocations.
+
+Currently we have two backends implemented:
+
+* An SQLite database-based back-end.
+* A Berkeley database back-end.
+
 
 
 Limitations
@@ -72,13 +76,20 @@ Redis:
     get_set  33267 requests in 5 seconds
     set_del  38706 requests in 5 seconds
 
-Predis:
+Predis using SQLite:
 
     incr_decr 11064 requests in 5 seconds
     get_set   13100 requests in 5 seconds
     set_del   11769 requests in 5 seconds
 
-This suggests that predis is 3-4 times slower than Redis, but obviously benchmarks are unrealistic and will vary depending on your system and use-case.
+Predis using BDB (launched via `./predis  --backend=BDB`)
+
+    incr_decr 14926 requests in 5 seconds
+    get_set   15896 requests in 5 seconds
+    set_del   16282 requests in 5 seconds
+
+
+This suggests that predis is 3-4 times slower than Redis using SQlite, and half as fast using the Berkeley database backend, but obviously benchmarks are unrealistic and will vary depending on your system and use-case.
 
 
 Extending
@@ -96,11 +107,11 @@ The sets should be simple to add at least, and there are two choices:
 We'd probably need to rework things to store hashes, although again we
 could use JSON-encoded Perl Hashes for the storage.
 
-(I suspect we'd want to update the storage-table to have three fields in this case:
-`key`, `val` and `type`.  Where `type` would be an ENUM between `str`, `array`, or `hash`.)
+(I suspect we'd want to update the storage-table to have three fields in this case: `key`, `val` and `type`.  Where `type` would be an ENUM between `str`, `array`, or `hash`.)
 
 The coding isn't hard, I just don't need it yet - so pull requests welcome.
 
+(This might be more complex now we also support the Berkeley back-end.)
 
 Steve
 --
