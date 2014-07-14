@@ -79,35 +79,66 @@ use Getopt::Long;
 use Pod::Usage;
 
 use Predis;
-use Predis::Backend::SQLite;
 
 
 #
 #  Parse our command-line options.
 #
-my %CONFIG = ( port => 6379 );
+my %CONFIG = ( port    => 6379,
+               backend => "SQLite" );
 
 exit
   if (
-       !GetOptions( "help"   => \$CONFIG{ 'help' },
-                    "manual" => \$CONFIG{ 'manual' },
-                    "debug"  => \$ENV{ 'DEBUG' },
-                    "port=i" => \$CONFIG{ 'port' },
-                    "path=s" => \$CONFIG{ 'path' } ) );
+       !GetOptions( "help"      => \$CONFIG{ 'help' },
+                    "manual"    => \$CONFIG{ 'manual' },
+                    "debug"     => \$ENV{ 'DEBUG' },
+                    "backend=s" => \$CONFIG{ 'backend' },
+                    "port=i"    => \$CONFIG{ 'port' },
+                    "path=s"    => \$CONFIG{ 'path' } ) );
 pod2usage(1) if ( $CONFIG{ 'help' } );
 pod2usage( -verbose => 2 ) if ( $CONFIG{ 'manual' } );
+
+
+
+#
+#  Load our back-end dynamcially
+#
+my $module = "Predis::Backend::$CONFIG{'backend'}";
+
+## no critic (Eval)
+eval( "use " . $module );
+## use critic
+
+if ($@)
+{
+    print "Loading the backend module failed - $module\n";
+    print "Valid back-ends are: SQLite and BDB\n";
+    print "Error was:\n\t$@\n";
+    exit(0);
+}
 
 
 #
 #  The backend storage module.
 #
-my $backend =
-  Predis::Backend::SQLite->new( path => $CONFIG{ 'path' } ? $CONFIG{ 'path' } :
-                                  undef );
+my $backend = $module->new( path => $CONFIG{ 'path' } ? $CONFIG{ 'path' } :
+                              undef );
+
 
 #
 #  The network-magic.
 #
 my $server = Predis->new( backend => $backend,
                           port    => $CONFIG{ 'port' } );
+
+
+#
+#  Show the banner
+#
+print <<EOF;
+predis starting, backend is $module.
+
+Connect to 127.0.0.1:$CONFIG{'port'}
+EOF
+
 $server->serve();
