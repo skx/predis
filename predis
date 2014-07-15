@@ -11,6 +11,7 @@ predis - Partial implementation of a Redis server in perl.
 
   General Options:
 
+   --backend   Specify the backend: SQLite, DBD, LMDB.
    --debug     Output a log of the commands which are executed.
    --port      Specify the port to listen upon.
    --path      Specify the back-end SQLite file to write.
@@ -23,10 +24,9 @@ predis - Partial implementation of a Redis server in perl.
 =head1 ABOUT
 
 predis is a 100% pure perl implementation of a Redis-server, which writes
-all date to an SQLite backing-store.
+all date to a persistant backing-store.
 
-The intention is that the back-ends will be pluggable, but that is not
-yet implemented.
+The back-ends are be pluggable, and currently several are supplied.
 
 Currently the following primitives are implemented:
 
@@ -112,7 +112,7 @@ eval( "use " . $module );
 if ($@)
 {
     print "Loading the backend module failed - $module\n";
-    print "Valid back-ends are: SQLite and BDB\n";
+    print "Valid back-ends are: SQLite, BDB, & LMDB.\n";
     print "Error was:\n\t$@\n";
     exit(0);
 }

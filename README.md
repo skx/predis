@@ -11,7 +11,7 @@ Currently we have two back-ends implemented:
 
 * An SQLite database-based back-end.
 * A Berkeley database back-end.
-
+* An LMDB database back-end.
 
 
 Limitations
@@ -86,6 +86,12 @@ Predis using BDB (launched via `./predis  --backend=BDB`)
     incr_decr 14926 requests in 5 seconds
     get_set   15896 requests in 5 seconds
     set_del   16282 requests in 5 seconds
+
+Predis using LMDB (launched via `./predis  --backend=LMDB`)
+
+    incr_decr 14425 requests in 5 seconds
+    get_set   14827 requests in 5 seconds
+    set_del   14841 requests in 5 seconds
 
 
 This suggests that predis is 3-4 times slower than Redis using SQlite, and half as fast using the Berkeley database back-end, but obviously benchmarks are unrealistic and will vary depending on your system and use-case.
