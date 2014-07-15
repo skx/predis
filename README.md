@@ -1,14 +1,13 @@
 predis
 ------
 
-A Redis server implemented in 100% pure Perl which proxies commands to a local
-SQLite instance.
+A Redis server implemented in 100% pure Perl which proxies commands to local storage.
 
 This server will listen upon a network, and accept/process Redis commands.  As such it can be useful for hacking around interesting problems.
 
 Because the storage is persistent database-values can be stored between different invocations.
 
-Currently we have two backends implemented:
+Currently we have two back-ends implemented:
 
 * An SQLite database-based back-end.
 * A Berkeley database back-end.
@@ -89,7 +88,7 @@ Predis using BDB (launched via `./predis  --backend=BDB`)
     set_del   16282 requests in 5 seconds
 
 
-This suggests that predis is 3-4 times slower than Redis using SQlite, and half as fast using the Berkeley database backend, but obviously benchmarks are unrealistic and will vary depending on your system and use-case.
+This suggests that predis is 3-4 times slower than Redis using SQlite, and half as fast using the Berkeley database back-end, but obviously benchmarks are unrealistic and will vary depending on your system and use-case.
 
 
 Extending
