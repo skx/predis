@@ -108,23 +108,15 @@ This suggests that predis is 3-4 times slower than Redis using SQlite, and half 
 Extending
 ---------
 
-Obviously I've only covered the simple case(s) so far.
+To make this more more compatible with Redis we need to implement the various missing primitives:
 
-To make this more Redis-like we'd need to add the set/hash functions.
+* The hash-related functionality.
+* The missing set-primitives need to be added.
 
-The sets should be simple to add at least, and there are two choices:
+The coding isn't hard, I just don't need it yet - so pull requests are most welcome.
 
-* Either allow multiple values for each key.
-* Or store JSON-encoded Arrays as key-members.
-
-We'd probably need to rework things to store hashes, although again we
-could use JSON-encoded Perl Hashes for the storage.
-
-(I suspect we'd want to update the storage-table to have three fields in this case: `key`, `val` and `type`.  Where `type` would be an ENUM between `str`, `array`, or `hash`.)
-
-The coding isn't hard, I just don't need it yet - so pull requests welcome.
-
-(This might be more complex now we also support the Berkeley back-end.)
+The biggest reason for avoiding these right now is that the SQLite backend is more complete, and
+implementing sets & hashes with only key-value storage on the back-end is hard.
 
 Steve
 --
