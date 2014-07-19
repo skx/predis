@@ -34,6 +34,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "INCR($key)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "incr" ) );
+
         return ( { type => ':', data => $backend->incr($key) } );
     },
     incrby => sub {
@@ -41,6 +47,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         my $amt  = $data->{ 'data' }[2]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "INCRBY($key,$amt)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "incrby" ) );
 
         return ( { type => ':', data => $backend->incr( $key, $amt ) } );
     },
@@ -53,6 +65,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "DECR($key)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "decr" ) );
+
         return ( { type => ':', data => $backend->decr($key) } );
 
     },
@@ -61,6 +79,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         my $amt  = $data->{ 'data' }[2]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "DECRBY($key,$amt)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "decrby" ) );
 
         return ( { type => ':', data => $backend->decr( $key, $amt ) } );
 
@@ -75,6 +99,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "DEL($key)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "del" ) );
+
         $backend->del($key);
 
         return ( { type => ':', data => 1 } );
@@ -88,6 +118,12 @@ my %commands = (
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "EXPIRE($key)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "expire" ) );
 
         $backend->expire($key);
 
@@ -107,6 +143,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "GET($key)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "get" ) );
+
         return ( { type => '+', data => $backend->get($key) } );
     },
 
@@ -118,6 +160,12 @@ my %commands = (
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "GET($key)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "get" ) );
 
         return ( { type => '+', data => length( $backend->get($key) ) } );
     },
@@ -133,6 +181,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         my $val  = $data->{ 'data' }[2]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "SET($key, $val)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "set" ) );
 
         $backend->set( $key, $val );
 
@@ -152,6 +206,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "SMEMBERS($key)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "smembers" ) );
+
         my @members = $backend->smembers($key);
         return ( { type => '*', data => @members } );
     },
@@ -169,6 +229,12 @@ my %commands = (
         my $val  = $data->{ 'data' }[2]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "SADD($key,$val)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "sadd" ) );
+
         return ( { type => '+', data => $backend->sadd( $key, $val ) } );
     },
 
@@ -185,6 +251,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "SRANDOMMEMBER($key)\n";
 
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "srandommember" ) );
+
         return ( { type => '+', data => $backend->srandommember($key) } );
     },
 
@@ -199,6 +271,12 @@ my %commands = (
         my $data = shift;
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "SCARD($key)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "scard" ) );
 
         return ( { type => '+', data => $backend->scard($key) } );
     },
@@ -216,6 +294,12 @@ my %commands = (
         my $key  = $data->{ 'data' }[1]->{ 'data' };
         my $val  = $data->{ 'data' }[2]->{ 'data' };
         $ENV{ 'DEBUG' } && print STDERR "SREM($key,$val)\n";
+
+        # Test the backend can implement the method we need.
+        return ( { type => '-',
+                   data => 'ERR Missing implementation for backend ' .
+                     $backend->name() }
+               ) unless ( UNIVERSAL::can( $backend, "srem" ) );
 
         return ( { type => '+', data => $backend->srem( $key, $val ) } );
     },
