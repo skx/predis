@@ -229,6 +229,25 @@ sub srandommember
 
 
 #
+#  Find the number of values in the set
+#
+sub scard
+{
+    my ( $self, $key ) = (@_);
+
+    if ( !$self->{ 'scard' } )
+    {
+        $self->{ 'scard' } =
+          $self->{ 'db' }->prepare("SELECT COUNT(id) FROM sets where key=?");
+    }
+    $self->{ 'scard' }->execute($key);
+    my $count = $self->{ 'scard' }->fetchrow_array() || 0;
+    $self->{ 'scard' }->finish();
+
+    return ($count);
+}
+
+#
 #  End of the module.
 #
 1;

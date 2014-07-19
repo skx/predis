@@ -188,6 +188,21 @@ my %commands = (
         return ( { type => '+', data => $backend->srandommember($key) } );
     },
 
+    #
+    #  Count the members in a set.
+    #
+    scard => sub {
+
+        #
+        #  This is nasty
+        #
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "SCARD($key)\n";
+
+        return ( { type => '+', data => $backend->scard($key) } );
+    },
+
 
     #
     #  Remove a string from a set
