@@ -34,8 +34,10 @@ For each of the backends the following primitives are implemented:
 Some of the set-primitives are supported **ONLY** with the SQLite backend:
 
 * `sadd(key,val)`
-* `smembers(key)`
+* `scard(key)`
 * `sdel(key,val)`
+* `smembers(key)`
+* `srandommember(key)`
 
 
 Testing
