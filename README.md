@@ -17,10 +17,10 @@ Currently we have two back-ends implemented:
 Limitations
 ------------
 
-Currently the implementation is incomplete, which means that most of the Redis
-data-structures are not implemented.
+The implementation includes the string-primitives for all back-ends, other
+structures are ignored in the name of simplicity.
 
-Currently the following primitives are implemented, all those ones that I need:
+For each of the backends the following primitives are implemented:
 
 * `get( key )`
 * `strlen( key )`
@@ -30,6 +30,12 @@ Currently the following primitives are implemented, all those ones that I need:
 * `decr( key )`
 * `decrby( key, amount )`
 * `del( key )`
+
+Some of the set-primitives are supported **ONLY** with the SQLite backend:
+
+* `sadd(key,val)`
+* `smembers(key)`
+* `sdel(key,val)`
 
 
 Testing
