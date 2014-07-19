@@ -36,6 +36,17 @@ sub new
 
 
 #
+#  Get the name of this module.
+#
+sub name
+{
+    my( $self ) = ( @_ );
+    my $class = ref($self);
+    return( $class );
+}
+
+
+#
 #  NOP
 #
 sub expire
