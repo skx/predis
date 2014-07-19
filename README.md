@@ -7,9 +7,10 @@ This server will listen upon a network, and accept/process Redis commands.  As s
 
 Because the storage is persistent database-values can be stored between different invocations.
 
-Currently we have two back-ends implemented:
+Currently we have several back-ends implemented:
 
 * An SQLite database-based back-end.
+   * This is the most complete, and contains functionality not present in the others.
 * A Berkeley database back-end.
 * An LMDB database back-end.
 
