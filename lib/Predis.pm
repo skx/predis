@@ -110,7 +110,6 @@ my %commands = (
         return ( { type => '+', data => $backend->get($key) } );
     },
 
-
     strlen => sub {
 
         #
@@ -139,6 +138,56 @@ my %commands = (
 
         return ( { type => '+', data => "OK" } );
     },
+
+
+    #
+    #  Get the set members of a key
+    #
+    smembers => sub {
+
+        #
+        #  This is nasty
+        #
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "SMEMBERS($key)\n";
+
+        my @members = $backend->smembers($key);
+        return ( { type => '*', data => @members } );
+    },
+
+    #
+    #  Add a string to a set.
+    #
+    sadd => sub {
+
+        #
+        #  This is nasty
+        #
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        my $val  = $data->{ 'data' }[2]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "SADD($key,$val)\n";
+
+        return ( { type => '+', data => $backend->sadd( $key, $val ) } );
+    },
+
+    #
+    #  Remove a string from a set
+    #
+    srem => sub {
+
+        #
+        #  This is nasty
+        #
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        my $val  = $data->{ 'data' }[2]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "SREM($key,$val)\n";
+
+        return ( { type => '+', data => $backend->srem( $key, $val ) } );
+    },
+
 
 );
 

@@ -33,7 +33,9 @@ sub new
     if ($create)
     {
         $self->{ 'db' }->do(
-              "CREATE TABLE store (id INTEGER PRIMARY KEY, key UNIQUE, val );");
+             "CREATE TABLE string (id INTEGER PRIMARY KEY, key UNIQUE, val );");
+        $self->{ 'db' }
+          ->do("CREATE TABLE sets (id INTEGER PRIMARY KEY, key, val );");
     }
 
     #
@@ -61,7 +63,7 @@ sub get
     if ( !$self->{ 'get' } )
     {
         $self->{ 'get' } =
-          $self->{ 'db' }->prepare("SELECT val FROM store WHERE key=?");
+          $self->{ 'db' }->prepare("SELECT val FROM string WHERE key=?");
     }
     $self->{ 'get' }->execute($key);
     my $x = $self->{ 'get' }->fetchrow_array() || "";
@@ -82,7 +84,7 @@ sub set
     {
         $self->{ 'ins' } =
           $self->{ 'db' }
-          ->prepare("INSERT OR REPLACE INTO store (key,val) VALUES( ?,? )");
+          ->prepare("INSERT OR REPLACE INTO string (key,val) VALUES( ?,? )");
     }
     $self->{ 'ins' }->execute( $key, $val );
     $self->{ 'ins' }->finish();
@@ -138,10 +140,68 @@ sub del
     if ( !$self->{ 'del' } )
     {
         $self->{ 'del' } =
-          $self->{ 'db' }->prepare("DELETE FROM store WHERE key=?");
+          $self->{ 'db' }->prepare("DELETE FROM string WHERE key=?");
     }
     $self->{ 'del' }->execute($key);
     $self->{ 'del' }->finish();
+}
+
+
+#
+#  Set members
+#
+sub smembers
+{
+    my ( $self, $key ) = (@_);
+
+    if ( !$self->{ 'smembers' } )
+    {
+        $self->{ 'smembers' } =
+          $self->{ 'db' }->prepare("SELECT val FROM sets WHERE key=?");
+    }
+    $self->{ 'smembers' }->execute($key);
+
+    my $vals;
+    while ( my ($name) = $self->{ 'smembers' }->fetchrow_array )
+    {
+        push( @$vals, { type => '+', data => $name } );
+    }
+    $self->{ 'smembers' }->finish();
+
+    return ($vals);
+}
+
+#
+#  Add to set.
+#
+sub sadd
+{
+    my ( $self, $key, $val ) = (@_);
+
+    if ( !$self->{ 'sadd' } )
+    {
+        $self->{ 'sadd' } =
+          $self->{ 'db' }->prepare("INSERT INTO sets (key,val) VALUES( ?,? )");
+    }
+    $self->{ 'sadd' }->execute( $key, $val );
+    $self->{ 'sadd' }->finish();
+}
+
+
+#
+#  Remove from a set.
+#
+sub srem
+{
+    my ( $self, $key, $val ) = (@_);
+
+    if ( !$self->{ 'srem' } )
+    {
+        $self->{ 'srem' } =
+          $self->{ 'db' }->prepare("DELETE FROM sets WHERE (key=? AND val=?)");
+    }
+    $self->{ 'srem' }->execute( $key, $val );
+    $self->{ 'srem' }->finish();
 }
 
 
