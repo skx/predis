@@ -35,6 +35,14 @@ sub new
 }
 
 
+#
+#  NOP
+#
+sub expire
+{
+
+    # NOP
+}
 
 #
 #  Get the value of a key.
