@@ -54,7 +54,7 @@ sub new
 
 
 #
-#  Get the value of a key.
+#  Get the value of a string-key.
 #
 sub get
 {
@@ -74,7 +74,7 @@ sub get
 
 
 #
-#  Set the value of a key.
+#  Set the value of a string-key.
 #
 sub set
 {
@@ -94,7 +94,7 @@ sub set
 
 
 #
-#  Increment and return the value of an (integer) key.
+#  Increment and return the value of an (integer) string-key.
 #
 sub incr
 {
@@ -113,7 +113,7 @@ sub incr
 
 
 #
-#  Decrement and return the value of an (integer) key.
+#  Decrement and return the value of an (integer) string-key.
 #
 sub decr
 {
@@ -131,7 +131,7 @@ sub decr
 
 
 #
-#  Delete the value of a key.
+#  Delete a string-key.
 #
 sub del
 {
@@ -147,8 +147,9 @@ sub del
 }
 
 
+
 #
-#  Set members
+# Get members of the given set.
 #
 sub smembers
 {
@@ -172,7 +173,7 @@ sub smembers
 }
 
 #
-#  Add to set.
+#  Add a member to a set.
 #
 sub sadd
 {
@@ -189,7 +190,7 @@ sub sadd
 
 
 #
-#  Remove from a set.
+#  Remove a member from a set.
 #
 sub srem
 {
@@ -204,6 +205,27 @@ sub srem
     $self->{ 'srem' }->finish();
 }
 
+
+#
+#  Fetch the value of a random member from a set.
+#
+sub srandommember
+{
+    my ( $self, $key ) = (@_);
+
+    if ( !$self->{ 'srandommember' } )
+    {
+        $self->{ 'srandommember' } =
+          $self->{ 'db' }->prepare(
+                "SELECT val FROM sets where key=? ORDER BY RANDOM() LIMIT 1") or
+          die "Failed to prepare";
+    }
+    $self->{ 'srandommember' }->execute($key);
+    my $x = $self->{ 'srandommember' }->fetchrow_array() || "";
+    $self->{ 'srandommember' }->finish();
+
+    return ($x);
+}
 
 
 #

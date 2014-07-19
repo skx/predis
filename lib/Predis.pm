@@ -172,6 +172,23 @@ my %commands = (
         return ( { type => '+', data => $backend->sadd( $key, $val ) } );
     },
 
+
+    #
+    #  Get a random member from a set.
+    #
+    srandommember => sub {
+
+        #
+        #  This is nasty
+        #
+        my $data = shift;
+        my $key  = $data->{ 'data' }[1]->{ 'data' };
+        $ENV{ 'DEBUG' } && print STDERR "SRANDOMMEMBER($key)\n";
+
+        return ( { type => '+', data => $backend->srandommember($key) } );
+    },
+
+
     #
     #  Remove a string from a set
     #
